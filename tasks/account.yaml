@@ -1,0 +1,13 @@
+---
+- name: "Create group ({{ alertmanager.group | default('alertmanager') }})"
+  become: "true"
+  group:
+    name: "{{ alertmanager.group | default('alertmanager') }}"
+
+- name: "Create user ({{ alertmanager.user | default('alertmanager') }})"
+  become: "true"
+  user:
+    name: "{{ alertmanager.user | default('alertmanager') }}"
+    create_home: "no"
+    group: "{{ alertmanager.group | default('alertmanager') }}"
+    shell: "/bin/false"

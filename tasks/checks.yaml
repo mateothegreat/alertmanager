@@ -1,0 +1,5 @@
+- name: "Check if alertmanager is accessible"
+  uri:
+    url: "http://{{ alertmanager.web.listen_address }}"
+    method: "GET"
+    status_code: "200"

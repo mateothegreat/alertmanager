@@ -1,0 +1,52 @@
+- name: "Download & unpack alertmanager"
+  unarchive:
+    src: "https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager.version }}/alertmanager-{{ alertmanager.version }}.linux-amd64.tar.gz"
+    dest: "/tmp"
+    remote_src: "yes"
+
+- name: "Install alertmanager binary"
+  become: "true"
+  copy:
+    src: "/tmp/alertmanager-{{ alertmanager.version }}.linux-amd64/alertmanager"
+    dest: "{{ alertmanager.install_path | default('/usr/local/bin') }}/alertmanager"
+    mode: "0555"
+    remote_src: "yes"
+
+- name: "Install amtool binary"
+  become: "true"
+  copy:
+    src: "/tmp/alertmanager-{{ alertmanager.version }}.linux-amd64/amtool"
+    dest: "{{ alertmanager.install_path | default('/usr/local/bin') }}/amtool"
+    mode: "0555"
+    remote_src: "yes"
+
+- name: "Install alertmanager.service"
+  become: "true"
+  template:
+    src: "alertmanager.service.j2"
+    dest: "/etc/systemd/system/alertmanager.service"
+    mode: "0600"
+
+- name: "Install alertmanager.yaml"
+  become: "true"
+  template:
+    src: "alertmanager.yaml.j2"
+    dest: "/etc/alertmanager/alertmanager.yaml"
+    mode: "0660"
+    owner: "{{ alertmanager.user }}"
+    group: "{{ alertmanager.group }}"
+
+- name: "Start alertmanager.service"
+  become: "true"
+  systemd:
+    name: "alertmanager"
+    enabled: "yes"
+    daemon_reload: "yes"
+    state: "restarted"
+
+- name: "Remove tmp files"
+  file:
+    path: "{{ item }}"
+    state: "absent"
+  loop:
+    - "/tmp/alertmanager-{{ alertmanager.version }}.linux-amd64"
