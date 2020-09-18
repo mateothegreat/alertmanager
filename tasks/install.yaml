@@ -27,23 +27,6 @@
     dest: "/etc/systemd/system/alertmanager.service"
     mode: "0600"
 
-- name: "Install alertmanager.yaml"
-  become: "true"
-  template:
-    src: "alertmanager.yaml.j2"
-    dest: "/etc/alertmanager/alertmanager.yaml"
-    mode: "0660"
-    owner: "{{ alertmanager.user }}"
-    group: "{{ alertmanager.group }}"
-
-- name: "Start alertmanager.service"
-  become: "true"
-  systemd:
-    name: "alertmanager"
-    enabled: "yes"
-    daemon_reload: "yes"
-    state: "restarted"
-
 - name: "Remove tmp files"
   file:
     path: "{{ item }}"

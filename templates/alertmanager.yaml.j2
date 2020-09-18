@@ -1,38 +1,19 @@
-{#global:#}
-{#  slack_api_url: 'https://hooks.slack.com/services/x/xx/xxx'#}
-{##}
-{#route:#}
-{#  group_by: ['instance', 'alert']#}
-{#  group_wait: 30s#}
-{#  group_interval: 5m#}
-{#  repeat_interval: 3h#}
-{#  receiver: team-1#}
-{##}
-{#receivers:#}
-{#  - name: 'team-1'#}
-{#    email_configs:#}
-{#      - to: 'user@domain.com'#}
-{#    slack_configs:#}
-{#      # https://prometheus.io/docs/alerting/configuration/#slack_config#}
-{#      - channel: 'system_events'#}
-{#      - username: 'AlertManager'#}
-{#      - icon_emoji: ':joy:'#}
 global:
   resolve_timeout: 5m
 
 route:
-  group_by: ['alertname']
-  group_wait: 10s
-  group_interval: 10s
-  repeat_interval: 1h
-  receiver: 'web.hook'
-receivers:
-- name: 'web.hook'
-  webhook_configs:
-  - url: 'http://127.0.0.1:5001/'
-inhibit_rules:
-  - source_match:
-      severity: 'critical'
-    target_match:
-      severity: 'warning'
-    equal: ['alertname', 'dev', 'instance']
+  group_by: {{ alertmanager.route.group_by }}
+  group_wait: {{ alertmanager.route.group_interval }}
+  group_interval: {{ alertmanager.route.group_interval }}
+  repeat_interval: {{ alertmanager.route.repeat_interval }}
+  receiver: {{ alertmanager.receiver_default }}
+  routes: {{ alertmanager.route.routes | from_yaml }}
+
+receivers: {{ alertmanager.receivers | from_yaml }}
+
+{#inhibit_rules:#}
+{#  - source_match:#}
+{#      severity: 'critical'#}
+{#    target_match:#}
+{#      severity: 'warning'#}
+{#    equal: ['alertname', 'dev', 'instance']#}
