@@ -2,7 +2,7 @@
   file:
     path: "/etc/alertmanager"
     state: "directory"
-    mode: "0660"
+    mode: "0770"
     owner: "{{ alertmanager.user }}"
     group: "{{ alertmanager.group }}"
 
