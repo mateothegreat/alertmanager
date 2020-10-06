@@ -1,11 +1,3 @@
-- name: "Create /etc/alertmanager"
-  file:
-    path: "/etc/alertmanager"
-    state: "directory"
-    mode: "0660"
-    owner: "{{ alertmanager.user }}"
-    group: "{{ alertmanager.group }}"
-
 - name: "Download & unpack alertmanager"
   unarchive:
     src: "https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager.version }}/alertmanager-{{ alertmanager.version }}.linux-amd64.tar.gz"

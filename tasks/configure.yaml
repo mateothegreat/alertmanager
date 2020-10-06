@@ -1,3 +1,11 @@
+- name: "Create /etc/alertmanager"
+  file:
+    path: "/etc/alertmanager"
+    state: "directory"
+    mode: "0660"
+    owner: "{{ alertmanager.user }}"
+    group: "{{ alertmanager.group }}"
+
 - name: "Install alertmanager.yaml"
   become: "true"
   template:
