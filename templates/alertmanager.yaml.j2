@@ -10,10 +10,3 @@ route:
   routes: {{ alertmanager.route.routes | from_yaml }}
 
 receivers: {{ alertmanager.receivers | from_yaml }}
-
-{#inhibit_rules:#}
-{#  - source_match:#}
-{#      severity: 'critical'#}
-{#    target_match:#}
-{#      severity: 'warning'#}
-{#    equal: ['alertname', 'dev', 'instance']#}
