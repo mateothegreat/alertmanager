@@ -1,4 +1,5 @@
 - name: "Create /etc/alertmanager"
+  become: "true"
   file:
     path: "/etc/alertmanager"
     state: "directory"
